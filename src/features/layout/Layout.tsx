@@ -10,7 +10,9 @@ const Layout = ({ children }: Props) => {
   return (
     <>
       <Header />
-      <Container sx={{ py: 3 }}>{children}</Container>
+      <Container sx={{ py: 4 }} disableGutters>
+        {children}
+      </Container>
     </>
   )
 }

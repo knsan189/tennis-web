@@ -1,22 +1,23 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-export interface CourtEntity {
-  title: string
-  availableDates: AvailableDate[]
+export interface DateInfo {
   month: number
   year: number
-  courtType: string
-  courtNumber: string
+  date: number
 }
 
-export interface AvailableDate extends CourtEntity {
-  date: number
-  availableTimes: AvailableTime[]
-}
+export interface CourtAvailableTime extends DateInfo {
+  id: string
 
-export interface AvailableTime extends CourtEntity {
-  date: number
   time: string
+  /** 코트 이름  ex) 테니스장1 */
+  courtName: string
+  /** 공원 타입 */
+  courtType: string
+  /** 코트 ID */
+  courtNumber: string
+
+  url: string
 }
 
 interface ApiServerResponse<T = unknown> {
@@ -25,7 +26,7 @@ interface ApiServerResponse<T = unknown> {
 }
 
 interface GetCourtsResponse {
-  courts: CourtEntity[]
+  availableTimes: CourtAvailableTime[]
   timestamp: string
   size: number
 }
@@ -38,8 +39,12 @@ const courtApiSlice = createApi({
   endpoints: builder => ({
     getCourts: builder.query<GetCourtsResponse, void>({
       query: () => "court",
-      transformResponse: (response: ApiServerResponse<GetCourtsResponse>) =>
-        response.data,
+      transformResponse: (response: ApiServerResponse<GetCourtsResponse>) => {
+        response.data.timestamp = new Date(
+          response.data.timestamp,
+        ).toLocaleString()
+        return response.data
+      },
     }),
   }),
   tagTypes: ["courts"],
