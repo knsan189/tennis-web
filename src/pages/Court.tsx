@@ -8,7 +8,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Grid2,
+  Container,
   List,
   ListItem,
   ListItemButton,
@@ -18,11 +18,14 @@ import {
   Typography,
 } from "@mui/material"
 import { ko } from "date-fns/locale"
+import { Masonry } from "@mui/lab"
+import { useAddScheduleMutation } from "../features/schedule/scheduleApiSlice"
 
 type GroupCourtsByDate = Record<number, Record<string, CourtAvailableTime[]>>
 
 const Court = () => {
   const { data } = useGetCourtsQuery(undefined, { pollingInterval: 1000 * 60 })
+  const [addSchedule] = useAddScheduleMutation()
 
   const groupCourtsByDate: GroupCourtsByDate = useMemo(() => {
     if (data === undefined) return {}
@@ -41,27 +44,43 @@ const Court = () => {
     return groupCourtsByDate
   }, [data])
 
-  const handleClickButton = (url: string) => {
-    window.open(url, "_blank")
+  const handleClickButton = (court: CourtAvailableTime) => {
+    window.open(court.url, "_blank")
+
+    const startTime = new Date(court.year, court.month - 1, court.date)
+    startTime.setHours(Number(court.time.split(":")[0]))
+    const endTime = new Date(startTime)
+    endTime.setHours(endTime.getHours() + 1)
+
+    addSchedule({
+      name: court.courtName,
+      courtName: "새물공원",
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString(),
+      dateFixed: false,
+    })
   }
 
   return (
-    <Stack spacing={4}>
-      <Typography variant="h6" gutterBottom align="center">
-        마지막 동기화 시간 : {data?.timestamp.toLocaleString()}
-      </Typography>
-      <Grid2 container spacing={2}>
-        {Object.entries(groupCourtsByDate)
-          .sort((a, b) => Number(a[0]) - Number(b[0]))
-          .map(([date, courts]) => {
-            const d = format(Number(date), "MMM do (E)", {
-              locale: ko,
-            })
-            return (
-              <Grid2 key={date} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-                <Card>
+    <Container>
+      <Stack spacing={3}>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              마지막 동기화 시간 : {data?.timestamp.toLocaleString()}
+            </Typography>
+          </CardContent>
+        </Card>
+        <Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 4 }} spacing={2}>
+          {Object.entries(groupCourtsByDate)
+            .sort((a, b) => Number(a[0]) - Number(b[0]))
+            .map(([date, courts]) => {
+              const d = format(Number(date), "MMM do (E)", {
+                locale: ko,
+              })
+              return (
+                <Card key={date}>
                   <CardHeader title={d} />
-
                   <CardContent sx={{ pt: 1 }}>
                     <Stack spacing={2}>
                       {Object.entries(courts)
@@ -81,9 +100,7 @@ const Court = () => {
                                     disableGutters
                                   >
                                     <ListItemButton
-                                      onClick={() =>
-                                        handleClickButton(court.url)
-                                      }
+                                      onClick={() => handleClickButton(court)}
                                     >
                                       <ListItemText primary={court.courtName} />
                                     </ListItemButton>
@@ -96,11 +113,11 @@ const Court = () => {
                     </Stack>
                   </CardContent>
                 </Card>
-              </Grid2>
-            )
-          })}
-      </Grid2>
-    </Stack>
+              )
+            })}
+        </Masonry>
+      </Stack>
+    </Container>
   )
 }
 

@@ -1,6 +1,6 @@
 import { Container } from "@mui/material"
 import type React from "react"
-import Header from "./Header"
+import Bottom from "./Bottom"
 
 interface Props {
   children: React.ReactNode
@@ -9,10 +9,8 @@ interface Props {
 const Layout = ({ children }: Props) => {
   return (
     <>
-      <Header />
-      <Container sx={{ py: 4 }} disableGutters>
-        {children}
-      </Container>
+      <Container sx={{ py: 2 }}>{children}</Container>
+      <Bottom />
     </>
   )
 }

@@ -49,6 +49,7 @@ const Main = () => {
               value={dayjs(request.startTime)}
               onChange={date => handleChangeTime(date, "startTime")}
               format="YYYY-MM-DD"
+              minDate={dayjs()}
             />
           </Stack>
         </CardContent>
@@ -69,6 +70,7 @@ const Main = () => {
       </Card>
       <Card>
         <DataGrid
+          disableColumnMenu
           rows={data}
           onRowClick={handleClickRow}
           columns={[
@@ -78,30 +80,35 @@ const Main = () => {
               align: "center",
               headerAlign: "center",
             },
+            // {
+            //   field: "courtName",
+            //   headerName: "코트",
+            //   headerAlign: "center",
+            //   align: "center",
+            //   width: 150,
+            // },
             {
-              field: "courtName",
+              field: "name",
               headerName: "코트",
               headerAlign: "center",
               align: "center",
               width: 150,
             },
-            { field: "name", headerName: "예약 제목", flex: 1 },
             {
               field: "startTime",
-              headerName: "시작 시간",
+              headerName: "예약시간",
               width: 200,
               renderCell: params =>
                 dayjs(params.value as string).format("YYYY-MM-DD HH:mm"),
             },
-            {
-              field: "endTime",
-              headerName: "종료 시간",
-              width: 200,
-              renderCell: params =>
-                dayjs(params.value as string).format("YYYY-MM-DD HH:mm"),
-            },
-
-            { field: "dateFixed", headerName: "확정 여부" },
+            // {
+            //   field: "endTime",
+            //   headerName: "종료 시간",
+            //   width: 200,
+            //   renderCell: params =>
+            //     dayjs(params.value as string).format("YYYY-MM-DD HH:mm"),
+            // },
+            // { field: "dateFixed", headerName: "확정 여부" },
           ]}
         />
       </Card>

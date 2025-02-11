@@ -26,11 +26,14 @@ interface Props {
   onClose: () => void
 }
 
+const initialTime = new Date()
+initialTime.setMinutes(0)
+
 const initialValues: AddScheduleRequest = {
   name: "",
   courtName: "새물공원",
-  startTime: new Date().toISOString(),
-  endTime: new Date().toISOString(),
+  startTime: initialTime.toISOString(),
+  endTime: initialTime.toISOString(),
   dateFixed: false,
 }
 
@@ -50,19 +53,14 @@ const ScheduleFormDialog = ({ open, editSchedule, onClose }: Props) => {
       [e.target.name]: e.target.value,
     }))
   }
-  const handleDateTimeChange = (date: Dayjs | null, name: string) => {
+  const handleDateTimeChange = (date: Dayjs | null) => {
     if (date === null) return
+    const newEndTime = dayjs(date).add(1, "hour")
     setValues(prev => ({
       ...prev,
-      [name]: date?.toISOString() ?? "",
+      startTime: date.toISOString(),
+      endTime: newEndTime.toISOString(),
     }))
-
-    if (name === "startTime" && values.endTime < date.toISOString()) {
-      setValues(prev => ({
-        ...prev,
-        endTime: date?.toISOString() ?? "",
-      }))
-    }
   }
 
   const handleSubmit = async (event: FormEvent) => {
@@ -78,7 +76,6 @@ const ScheduleFormDialog = ({ open, editSchedule, onClose }: Props) => {
   const handleClickRemove = async () => {
     if (!editSchedule) return
     await removeSchedule(editSchedule.id).unwrap()
-
     handleClose()
   }
 
@@ -110,16 +107,11 @@ const ScheduleFormDialog = ({ open, editSchedule, onClose }: Props) => {
               <DateTimePicker
                 label="시작시간"
                 value={dayjs(values.startTime)}
-                onChange={date => handleDateTimeChange(date, "startTime")}
+                onChange={handleDateTimeChange}
                 slotProps={{ textField: { fullWidth: true, required: true } }}
                 format="YYYY-MM-DD HH:mm"
-              />
-              <DateTimePicker
-                label="종료시간"
-                value={dayjs(values.endTime)}
-                onChange={date => handleDateTimeChange(date, "endTime")}
-                slotProps={{ textField: { fullWidth: true, required: true } }}
-                format="YYYY-MM-DD HH:mm"
+                minutesStep={60}
+                minDate={dayjs()}
               />
             </Stack>
             <TextField
