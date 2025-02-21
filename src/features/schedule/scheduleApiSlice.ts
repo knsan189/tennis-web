@@ -40,6 +40,11 @@ const scheduleApiSlice = baseApi.injectEndpoints({
         params: request,
       }),
       transformResponse: (response: GetScheduleListResponse) => {
+        response.data.sort((a, b) => {
+          return (
+            new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+          )
+        })
         return response.data
       },
       providesTags: ["schedules"],

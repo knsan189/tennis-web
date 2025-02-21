@@ -33,6 +33,11 @@ const Main = () => {
 
   const onToggleDialog = useCallback(() => setDialog(prev => !prev), [])
 
+  const onCloseDialog = useCallback(() => {
+    setEditSchedule(null)
+    setDialog(false)
+  }, [])
+
   const handleClickRow = (params: GridRowParams<Schedule>) => {
     setEditSchedule(params.row)
     onToggleDialog()
@@ -65,7 +70,7 @@ const Main = () => {
         <ScheduleFormDialog
           open={dialog}
           editSchedule={editSchedule}
-          onClose={onToggleDialog}
+          onClose={onCloseDialog}
         />
       </Card>
       <Card>
