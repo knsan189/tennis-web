@@ -3,10 +3,11 @@ import { combineSlices, configureStore } from "@reduxjs/toolkit"
 import { setupListeners } from "@reduxjs/toolkit/query"
 import baseApi from "../features/baseApi"
 import courtApiSlice from "../features/court/courtApiSlice"
+import reserveApilSlice from "../features/reserve/reserveApiSlice"
 
 // `combineSlices` automatically combines the reducers using
 // their `reducerPath`s, therefore we no longer need to call `combineReducers`.
-const rootReducer = combineSlices(baseApi, courtApiSlice)
+const rootReducer = combineSlices(baseApi, courtApiSlice, reserveApilSlice)
 // Infer the `RootState` type from the root reducer
 export type RootState = ReturnType<typeof rootReducer>
 
@@ -21,6 +22,7 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
       return getDefaultMiddleware().concat(
         baseApi.middleware,
         courtApiSlice.middleware,
+        reserveApilSlice.middleware,
       )
     },
     preloadedState,

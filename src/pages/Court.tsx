@@ -1,10 +1,11 @@
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import {
   type CourtAvailableTime,
   useGetCourtsQuery,
 } from "../features/court/courtApiSlice"
 import { format } from "date-fns"
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -20,6 +21,8 @@ import {
 import { ko } from "date-fns/locale"
 import { Masonry } from "@mui/lab"
 import { useAddScheduleMutation } from "../features/schedule/scheduleApiSlice"
+import CourtSettingDialog from "../features/court/CourtSettingDialog"
+import { useReserveCourtMutation } from "../features/reserve/reserveApiSlice"
 
 type GroupCourtsByDate = Record<number, Record<string, CourtAvailableTime[]>>
 
@@ -44,8 +47,9 @@ const Court = () => {
     return groupCourtsByDate
   }, [data])
 
-  const handleClickButton = (court: CourtAvailableTime) => {
-    window.open(court.url, "_blank")
+  const [reserveCourt, { isLoading }] = useReserveCourtMutation()
+  const handleClickButton = async (court: CourtAvailableTime) => {
+    await reserveCourt(court).unwrap()
 
     const startTime = new Date(court.year, court.month - 1, court.date)
     startTime.setHours(Number(court.time.split(":")[0]))
@@ -61,6 +65,10 @@ const Court = () => {
     })
   }
 
+  const [open, setOpen] = useState(false)
+  const handleClickOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
   return (
     <Container>
       <Stack spacing={3}>
@@ -69,6 +77,7 @@ const Court = () => {
             <Typography variant="h6" gutterBottom>
               마지막 동기화 시간 : {data?.timestamp.toLocaleString()}
             </Typography>
+            <Button onClick={handleClickOpen}>코트 설정</Button>
           </CardContent>
         </Card>
         <Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 4 }} spacing={2}>
@@ -101,6 +110,7 @@ const Court = () => {
                                   >
                                     <ListItemButton
                                       onClick={() => handleClickButton(court)}
+                                      disabled={isLoading}
                                     >
                                       <ListItemText primary={court.courtName} />
                                     </ListItemButton>
@@ -117,6 +127,7 @@ const Court = () => {
             })}
         </Masonry>
       </Stack>
+      <CourtSettingDialog open={open} onClose={handleClose} />
     </Container>
   )
 }

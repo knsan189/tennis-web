@@ -10,10 +10,13 @@ export interface CourtAvailableTime extends DateInfo {
   id: string
 
   time: string
+
   /** 코트 이름  ex) 테니스장1 */
   courtName: string
+
   /** 공원 타입 */
   courtType: string
+
   /** 코트 ID */
   courtNumber: string
 
