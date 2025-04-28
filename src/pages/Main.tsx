@@ -17,23 +17,19 @@ import dayjs, { type Dayjs } from "dayjs"
 import { useCallback, useState } from "react"
 import ScheduleFormDialog from "../features/schedule/ScheduleFormDialog"
 import { Add } from "@mui/icons-material"
+import { useGetMyReservationsQuery } from "../features/reserve/reserveApiSlice"
 
 const Main = () => {
-  const [request, setRequest] = useState<GetScheduleListRequest>({
-    startTime: new Date().toISOString(),
-    endTime: "",
-    courtName: "",
-    name: "",
-  })
+  // const { data = [] } = useGetScheduleListQuery(request)
 
-  const { data = [] } = useGetScheduleListQuery(request)
+  const { data = [] } = useGetMyReservationsQuery(undefined)
 
-  const handleChangeTime = (date: Dayjs | null, name: string) => {
-    setRequest(prev => ({
-      ...prev,
-      [name]: date?.toISOString() ?? "",
-    }))
-  }
+  // const handleChangeTime = (date: Dayjs | null, name: string) => {
+  //   setRequest(prev => ({
+  //     ...prev,
+  //     [name]: date?.toISOString() ?? "",
+  //   }))
+  // }
 
   const [dialog, setDialog] = useState(false)
   const [editSchedule, setEditSchedule] = useState<Schedule | null>(null)
@@ -52,7 +48,7 @@ const Main = () => {
 
   return (
     <Stack spacing={2}>
-      <Card>
+      {/* <Card>
         <CardContent>
           <Stack spacing={2} direction="row">
             <DatePicker
@@ -79,7 +75,7 @@ const Main = () => {
           editSchedule={editSchedule}
           onClose={onCloseDialog}
         />
-      </Card>
+      </Card> */}
       <Card>
         <DataGrid
           disableColumnMenu
@@ -102,12 +98,13 @@ const Main = () => {
               headerAlign: "center",
             },
             {
-              field: "name",
+              field: "courtName",
               headerName: "코트",
               headerAlign: "center",
               align: "center",
               width: 150,
             },
+
             {
               field: "startTime",
               headerName: "예약시간",

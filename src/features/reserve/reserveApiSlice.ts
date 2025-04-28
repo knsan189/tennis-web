@@ -30,9 +30,22 @@ const reserveApilSlice = createApi({
         method: "GET",
       }),
     }),
+    getMyReservations: builder.query<CourtAvailableTime[], void>({
+      query: () => ({
+        url: "reserve/mylist",
+        method: "GET",
+      }),
+      transformResponse: (response: CourtAvailableTime[]) =>
+        response.sort((a, b) => {
+          return a.startTime.toString().localeCompare(b.startTime.toString())
+        }),
+    }),
   }),
 })
 
-export const { useStartReservationMutation, useCheckReservationStatusQuery } =
-  reserveApilSlice
+export const {
+  useStartReservationMutation,
+  useCheckReservationStatusQuery,
+  useGetMyReservationsQuery,
+} = reserveApilSlice
 export default reserveApilSlice

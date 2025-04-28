@@ -21,6 +21,12 @@ export interface CourtAvailableTime extends DateInfo {
   courtNumber: string
 
   url: string
+
+  startTime: Date
+
+  endTime: Date
+
+  dateFixed: boolean
 }
 
 interface ApiServerResponse<T = unknown> {
