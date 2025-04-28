@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-
 import LayoutOutlet from "./features/layout/LayoutOutlet"
 import { lazy, Suspense } from "react"
 

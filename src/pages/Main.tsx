@@ -3,7 +3,14 @@ import {
   type Schedule,
   useGetScheduleListQuery,
 } from "../features/schedule/scheduleApiSlice"
-import { Button, Card, CardContent, DialogActions, Stack } from "@mui/material"
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  DialogActions,
+  Stack,
+} from "@mui/material"
 import { DataGrid, type GridRowParams } from "@mui/x-data-grid"
 import { DatePicker } from "@mui/x-date-pickers"
 import dayjs, { type Dayjs } from "dayjs"
@@ -78,6 +85,15 @@ const Main = () => {
           disableColumnMenu
           rows={data}
           onRowClick={handleClickRow}
+          pageSizeOptions={[10, 20, 50]}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 10,
+                page: 0,
+              },
+            },
+          }}
           columns={[
             {
               field: "id",
@@ -85,13 +101,6 @@ const Main = () => {
               align: "center",
               headerAlign: "center",
             },
-            // {
-            //   field: "courtName",
-            //   headerName: "코트",
-            //   headerAlign: "center",
-            //   align: "center",
-            //   width: 150,
-            // },
             {
               field: "name",
               headerName: "코트",
@@ -106,17 +115,10 @@ const Main = () => {
               renderCell: params =>
                 dayjs(params.value as string).format("YYYY-MM-DD HH:mm"),
             },
-            // {
-            //   field: "endTime",
-            //   headerName: "종료 시간",
-            //   width: 200,
-            //   renderCell: params =>
-            //     dayjs(params.value as string).format("YYYY-MM-DD HH:mm"),
-            // },
-            // { field: "dateFixed", headerName: "확정 여부" },
           ]}
         />
       </Card>
+      <Box height={100} />
     </Stack>
   )
 }
