@@ -1,17 +1,22 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import Main from "./pages/Main"
-import Court from "./pages/Court"
+
 import LayoutOutlet from "./features/layout/LayoutOutlet"
+import { lazy, Suspense } from "react"
+
+const Main = lazy(() => import("./pages/Main"))
+const Court = lazy(() => import("./pages/Court"))
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<LayoutOutlet />}>
-          <Route path="/" element={<Main />} />
-          <Route path="/court" element={<Court />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={<LayoutOutlet />}>
+        <Routes>
+          <Route element={<LayoutOutlet />}>
+            <Route path="/" element={<Main />} />
+            <Route path="/court" element={<Court />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }
