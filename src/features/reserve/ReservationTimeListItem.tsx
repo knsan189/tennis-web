@@ -47,7 +47,7 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
     if (data?.status === "completed") {
       setTaskId(null)
     }
-  }, [data?.status])
+  }, [data])
 
   return (
     <ListItem
@@ -64,7 +64,7 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
       }
     >
       <ListItemButton onClick={handleClick} disabled={taskId !== null}>
-        <ListItemText primary={court.courtName} />
+        <ListItemText primary={court.courtName} secondary={data?.logs.length} />
       </ListItemButton>
     </ListItem>
   )
