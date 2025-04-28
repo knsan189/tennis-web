@@ -1,17 +1,37 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import type { CourtAvailableTime } from "../court/courtApiSlice"
 
+interface Task {
+  status: "pending" | "completed"
+  logs: string[]
+}
+
+interface StartReservationResponse {
+  taskId: string
+}
+
 const reserveApilSlice = createApi({
   reducerPath: "reserveApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_RESERVE_API_SERVER_URL,
+    // baseUrl: import.meta.env.VITE_RESERVE_API_SERVER_URL,
+    baseUrl: "http://localhost:4000",
   }),
   endpoints: builder => ({
-    reserveCourt: builder.mutation<string, CourtAvailableTime>({
+    startReservation: builder.mutation<
+      StartReservationResponse,
+      CourtAvailableTime
+    >({
       query: request => ({ url: "reserve", body: request, method: "POST" }),
+    }),
+    checkReservationStatus: builder.query<Task, string>({
+      query: taskId => ({
+        url: `reserve/status/${taskId}`,
+        method: "GET",
+      }),
     }),
   }),
 })
 
-export const { useReserveCourtMutation } = reserveApilSlice
+export const { useStartReservationMutation, useCheckReservationStatusQuery } =
+  reserveApilSlice
 export default reserveApilSlice
