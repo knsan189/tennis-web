@@ -4,15 +4,7 @@ import {
   useGetCourtsQuery,
   useRefreshCourtsMutation,
 } from "../features/court/courtApiSlice"
-import {
-  Box,
-  Card,
-  Divider,
-  Grid2,
-  Skeleton,
-  Stack,
-  Typography,
-} from "@mui/material"
+import { Box, Card, Grid2, Skeleton, Stack, Typography } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
 import ReservationDateCard from "../features/reserve/ReservationDateCard"
 import { Refresh } from "@mui/icons-material"

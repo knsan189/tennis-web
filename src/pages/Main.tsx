@@ -1,7 +1,6 @@
 import {
   Box,
   Card,
-  Divider,
   Grid2,
   Paper,
   Skeleton,
@@ -61,7 +60,7 @@ const Main = () => {
               <Skeleton variant="text" width="30%" height={40} />
               <Grid2 container spacing={2}>
                 {Array.from({ length: 4 }, (_, dateIndex) => (
-                  <Grid2 size={{ sm: 6, md: 4, lg: 3 }} key={dateIndex}>
+                  <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={dateIndex}>
                     <Card>
                       <Stack spacing={1} padding={2}>
                         <Skeleton variant="text" width="50%" />
