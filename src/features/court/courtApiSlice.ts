@@ -40,6 +40,8 @@ interface GetCourtsResponse {
   size: number
 }
 
+export type GroupedCourts = Record<number, Record<string, CourtAvailableTime[]>>
+
 const courtApiSlice = createApi({
   reducerPath: "courtApi",
   baseQuery: fetchBaseQuery({

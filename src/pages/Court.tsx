@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import {
-  type CourtAvailableTime,
+  type GroupedCourts,
   useGetCourtsQuery,
 } from "../features/court/courtApiSlice"
 import {
@@ -14,8 +14,6 @@ import {
 import { Masonry } from "@mui/lab"
 import CourtSettingDialog from "../features/court/CourtSettingDialog"
 import ReservationDateCard from "../features/reserve/ReservationDateCard"
-
-type GroupedCourts = Record<number, Record<string, CourtAvailableTime[]>>
 
 const Court = () => {
   const { data } = useGetCourtsQuery(undefined, { pollingInterval: 1000 * 60 })
