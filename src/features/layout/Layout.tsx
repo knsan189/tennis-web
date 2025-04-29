@@ -9,7 +9,7 @@ interface Props {
 const Layout = ({ children }: Props) => {
   return (
     <>
-      <Container sx={{ py: 2 }}>{children}</Container>
+      <Container sx={{ py: 4 }}>{children}</Container>
       <Bottom />
     </>
   )

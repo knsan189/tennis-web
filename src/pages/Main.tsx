@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  Divider,
   Grid2,
   Paper,
   Skeleton,
@@ -47,87 +48,105 @@ const Main = () => {
 
   return (
     <Stack spacing={4}>
-      {isLoading ? (
-        <Grid2 container spacing={2}>
-          {Array.from({ length: 10 }, (_, index) => (
-            <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
-              <Card>
-                <Stack spacing={1} padding={2}>
-                  <Skeleton variant="text" width="50%" />
-                  <Skeleton variant="text" width="80%" />
-                  <Skeleton variant="text" width="60%" />
-                </Stack>
-              </Card>
-            </Grid2>
-          ))}
-        </Grid2>
-      ) : (
-        Object.entries(groupedByWeek)
-          .sort()
-          .map(([weekKey, dates]) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const [_, month, week] = weekKey.split("-")
-            return (
-              <Stack key={weekKey} spacing={2}>
-                <Typography
-                  variant="h5"
-                  gutterBottom
-                >{`${month}월 ${week}주차`}</Typography>
-                <Grid2 container spacing={2}>
-                  {Object.entries(dates)
-                    .sort((a, b) => Number(a[0]) - Number(b[0]))
-                    .map(([date, timeslots]) => (
-                      <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={date}>
-                        <Card>
-                          <Stack spacing={2} padding={2}>
-                            <Typography variant="h6">
-                              {format(Number(date), " MMM do (E)", {
-                                locale: ko,
-                              })}
-                            </Typography>
-                            {Object.entries(timeslots).map(([time, courts]) => (
-                              <Stack key={time} spacing={1}>
-                                <Typography variant="subtitle1" gutterBottom>
-                                  {time}
-                                </Typography>
-                                {courts.map(court => (
-                                  <Paper key={court.id} variant="outlined">
-                                    <Box
-                                      p={1}
-                                      display="flex"
-                                      alignItems="center"
-                                      justifyContent="space-between"
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box>
+          <Typography variant="h5">예약 현황</Typography>
+        </Box>
+      </Box>
+
+      {isLoading
+        ? Array.from({ length: 3 }, (_, weekIndex) => (
+            <Stack key={weekIndex} spacing={2}>
+              {/* 주차 제목 스켈레톤 */}
+              <Skeleton variant="text" width="30%" height={40} />
+              <Grid2 container spacing={2}>
+                {Array.from({ length: 4 }, (_, dateIndex) => (
+                  <Grid2 size={{ sm: 6, md: 4, lg: 3 }} key={dateIndex}>
+                    <Card>
+                      <Stack spacing={1} padding={2}>
+                        <Skeleton variant="text" width="50%" />
+                        <Skeleton variant="text" width="80%" />
+                        <Skeleton variant="text" width="60%" />
+                      </Stack>
+                    </Card>
+                  </Grid2>
+                ))}
+              </Grid2>
+            </Stack>
+          ))
+        : Object.entries(groupedByWeek)
+            .sort()
+            .map(([weekKey, dates]) => {
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const [_, month, week] = weekKey.split("-")
+              return (
+                <Stack key={weekKey} spacing={2}>
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                  >{`${month}월 ${week}주차`}</Typography>
+                  <Grid2 container spacing={2}>
+                    {Object.entries(dates)
+                      .sort((a, b) => Number(a[0]) - Number(b[0]))
+                      .map(([date, timeslots]) => (
+                        <Grid2
+                          size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+                          key={date}
+                        >
+                          <Card>
+                            <Stack spacing={2} padding={2}>
+                              <Typography variant="subtitle1">
+                                {format(Number(date), " MMM do (E)", {
+                                  locale: ko,
+                                })}
+                              </Typography>
+                              {Object.entries(timeslots).map(
+                                ([time, courts]) => (
+                                  <Stack key={time} spacing={1}>
+                                    <Typography
+                                      variant="subtitle2"
+                                      gutterBottom
                                     >
-                                      <Typography variant="body2">
-                                        {court.courtName}
-                                      </Typography>
-                                      <Typography
-                                        component="span"
-                                        variant="caption"
-                                        color={
-                                          court.dateFixed
-                                            ? "text.secondary"
-                                            : "error"
-                                        }
-                                      >
-                                        {court.dateFixed
-                                          ? "결제 완료"
-                                          : "결제 대기"}
-                                      </Typography>
-                                    </Box>
-                                  </Paper>
-                                ))}
-                              </Stack>
-                            ))}
-                          </Stack>
-                        </Card>
-                      </Grid2>
-                    ))}
-                </Grid2>
-              </Stack>
-            )
-          })
-      )}
+                                      {time}
+                                    </Typography>
+                                    {courts.map(court => (
+                                      <Paper key={court.id} variant="outlined">
+                                        <Box
+                                          p={1}
+                                          display="flex"
+                                          alignItems="center"
+                                          justifyContent="space-between"
+                                        >
+                                          <Typography variant="body2">
+                                            {court.courtName}
+                                          </Typography>
+                                          <Typography
+                                            component="span"
+                                            variant="caption"
+                                            color={
+                                              court.dateFixed
+                                                ? "text.secondary"
+                                                : "error"
+                                            }
+                                          >
+                                            {court.dateFixed
+                                              ? "결제 완료"
+                                              : "결제 대기"}
+                                          </Typography>
+                                        </Box>
+                                      </Paper>
+                                    ))}
+                                  </Stack>
+                                ),
+                              )}
+                            </Stack>
+                          </Card>
+                        </Grid2>
+                      ))}
+                  </Grid2>
+                </Stack>
+              )
+            })}
       <Box height={100} />
     </Stack>
   )

@@ -14,6 +14,7 @@ import {
   useStartReservationMutation,
 } from "./reserveApiSlice"
 import { useEffect, useState } from "react"
+import useCheckAdmin from "./hooks/useCheckAdmin"
 
 interface Props {
   court: CourtAvailableTime
@@ -21,6 +22,7 @@ interface Props {
 }
 
 const ReservationTimeListItem = ({ court, divider }: Props) => {
+  const { isAdmin } = useCheckAdmin()
   const [reserveCourt] = useStartReservationMutation()
   const [refreshCourts, { isLoading }] = useRefreshCourtsMutation()
   const [taskId, setTaskId] = useState<string | null>(null)
@@ -31,8 +33,12 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
   })
 
   const handleClick = async () => {
-    const response = await reserveCourt(court).unwrap()
-    setTaskId(response.taskId)
+    if (isAdmin) {
+      const response = await reserveCourt(court).unwrap()
+      setTaskId(response.taskId)
+    } else {
+      window.open(court.url, "_blank")
+    }
   }
 
   useEffect(() => {
