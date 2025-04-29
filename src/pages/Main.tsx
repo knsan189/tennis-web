@@ -78,7 +78,7 @@ const Main = () => {
                     .map(([date, timeslots]) => (
                       <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={date}>
                         <Card>
-                          <Stack spacing={1} padding={2}>
+                          <Stack spacing={2} padding={2}>
                             <Typography variant="h6">
                               {format(Number(date), " MMM do (E)", {
                                 locale: ko,
@@ -86,16 +86,34 @@ const Main = () => {
                             </Typography>
                             {Object.entries(timeslots).map(([time, courts]) => (
                               <Stack key={time} spacing={1}>
-                                <Typography variant="subtitle1">
+                                <Typography variant="subtitle1" gutterBottom>
                                   {time}
                                 </Typography>
                                 {courts.map(court => (
                                   <Paper key={court.id} variant="outlined">
-                                    <Stack padding={1}>
+                                    <Box
+                                      p={1}
+                                      display="flex"
+                                      alignItems="center"
+                                      justifyContent="space-between"
+                                    >
                                       <Typography variant="body2">
                                         {court.courtName}
                                       </Typography>
-                                    </Stack>
+                                      <Typography
+                                        component="span"
+                                        variant="caption"
+                                        color={
+                                          court.dateFixed
+                                            ? "text.secondary"
+                                            : "error"
+                                        }
+                                      >
+                                        {court.dateFixed
+                                          ? "결제 완료"
+                                          : "결제 대기"}
+                                      </Typography>
+                                    </Box>
                                   </Paper>
                                 ))}
                               </Stack>
