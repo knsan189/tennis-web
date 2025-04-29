@@ -1,4 +1,4 @@
-import { Container } from "@mui/material"
+import { Box, Container } from "@mui/material"
 import type React from "react"
 import Bottom from "./Bottom"
 
@@ -9,7 +9,9 @@ interface Props {
 const Layout = ({ children }: Props) => {
   return (
     <>
-      <Container sx={{ py: 4 }}>{children}</Container>
+      <Container sx={{ py: 4 }}>
+        {children} <Box height={100} />
+      </Container>
       <Bottom />
     </>
   )

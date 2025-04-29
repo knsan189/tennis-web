@@ -15,6 +15,7 @@ import {
 } from "./reserveApiSlice"
 import { useEffect, useState } from "react"
 import useCheckAdmin from "./hooks/useCheckAdmin"
+import { OpenInNew } from "@mui/icons-material"
 
 interface Props {
   court: CourtAvailableTime
@@ -70,6 +71,7 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
           primary={court.courtName}
           secondary={taskId !== null ? data?.logs.length : null}
         />
+        <OpenInNew fontSize="small" />
       </ListItemButton>
     </ListItem>
   )

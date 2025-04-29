@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  Divider,
   Grid2,
   Paper,
   Skeleton,
@@ -49,7 +50,18 @@ const Main = () => {
     <Stack spacing={4}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Box>
-          <Typography variant="h5">예약 현황</Typography>
+          <Typography variant="h5" gutterBottom>
+            예약 현황
+          </Typography>
+          <Typography variant="subtitle2" color="text.secondary">
+            {new Date().toLocaleString("ko-KR", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </Typography>
         </Box>
       </Box>
 
@@ -99,6 +111,7 @@ const Main = () => {
                                   locale: ko,
                                 })}
                               </Typography>
+                              <Divider />
                               {Object.entries(timeslots).map(
                                 ([time, courts]) => (
                                   <Stack key={time} spacing={1}>
@@ -111,7 +124,8 @@ const Main = () => {
                                     {courts.map(court => (
                                       <Paper key={court.id} variant="outlined">
                                         <Box
-                                          p={1}
+                                          py={1}
+                                          px={2}
                                           display="flex"
                                           alignItems="center"
                                           justifyContent="space-between"
@@ -146,7 +160,6 @@ const Main = () => {
                 </Stack>
               )
             })}
-      <Box height={100} />
     </Stack>
   )
 }

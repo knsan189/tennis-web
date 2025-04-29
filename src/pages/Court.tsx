@@ -72,8 +72,9 @@ const Court = () => {
       {isLoading
         ? Array.from({ length: 3 }, (_, weekIndex) => (
             <Stack key={weekIndex} spacing={2}>
-              {/* 주차 제목 스켈레톤 */}
-              <Skeleton variant="text" width="30%" height={40} />
+              <Typography variant="h6" gutterBottom>
+                <Skeleton variant="text" width="30%" />
+              </Typography>
               <Grid2 container spacing={2}>
                 {Array.from({ length: 4 }, (_, dateIndex) => (
                   <Grid2 size={{ sm: 6, md: 4, lg: 3 }} key={dateIndex}>
