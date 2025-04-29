@@ -12,30 +12,6 @@ import {
 } from "@mui/material"
 import type createPalette from "./createPalette"
 
-declare module "@mui/material/Button" {
-  interface ButtonPropsColorOverrides {
-    adminPrimary: true
-  }
-}
-
-declare module "@mui/material/AppBar" {
-  interface AppBarPropsColorOverrides {
-    adminPrimary: true
-  }
-}
-
-declare module "@mui/material/SvgIcon" {
-  interface SvgIconPropsColorOverrides {
-    adminPrimary: true
-  }
-}
-
-declare module "@mui/material/Pagination" {
-  interface PaginationPropsColorOverrides {
-    adminPrimary: true
-  }
-}
-
 const muiTheme = createTheme()
 
 const createComponents = (

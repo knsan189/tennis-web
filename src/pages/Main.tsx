@@ -1,91 +1,23 @@
-import {
-  type GetScheduleListRequest,
-  type Schedule,
-  useGetScheduleListQuery,
-} from "../features/schedule/scheduleApiSlice"
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  DialogActions,
-  Stack,
-} from "@mui/material"
-import { DataGrid, type GridRowParams } from "@mui/x-data-grid"
-import { DatePicker } from "@mui/x-date-pickers"
-import dayjs, { type Dayjs } from "dayjs"
-import { useCallback, useState } from "react"
-import ScheduleFormDialog from "../features/schedule/ScheduleFormDialog"
-import { Add } from "@mui/icons-material"
+import { Box, Card, Stack, Typography } from "@mui/material"
+import { DataGrid } from "@mui/x-data-grid"
+import dayjs from "dayjs"
 import { useGetMyReservationsQuery } from "../features/reserve/reserveApiSlice"
 
 const Main = () => {
-  // const { data = [] } = useGetScheduleListQuery(request)
-
-  const { data = [] } = useGetMyReservationsQuery(undefined)
-
-  // const handleChangeTime = (date: Dayjs | null, name: string) => {
-  //   setRequest(prev => ({
-  //     ...prev,
-  //     [name]: date?.toISOString() ?? "",
-  //   }))
-  // }
-
-  const [dialog, setDialog] = useState(false)
-  const [editSchedule, setEditSchedule] = useState<Schedule | null>(null)
-
-  const onToggleDialog = useCallback(() => setDialog(prev => !prev), [])
-
-  const onCloseDialog = useCallback(() => {
-    setEditSchedule(null)
-    setDialog(false)
-  }, [])
-
-  const handleClickRow = (params: GridRowParams<Schedule>) => {
-    setEditSchedule(params.row)
-    onToggleDialog()
-  }
+  const { data = [], isLoading } = useGetMyReservationsQuery(undefined)
 
   return (
     <Stack spacing={2}>
-      {/* <Card>
-        <CardContent>
-          <Stack spacing={2} direction="row">
-            <DatePicker
-              name="startTime"
-              label="시작 날짜"
-              value={dayjs(request.startTime)}
-              onChange={date => handleChangeTime(date, "startTime")}
-              format="YYYY-MM-DD"
-              minDate={dayjs()}
-            />
-          </Stack>
-        </CardContent>
-        <DialogActions>
-          <Button
-            onClick={onToggleDialog}
-            variant="contained"
-            startIcon={<Add />}
-          >
-            일정 추가
-          </Button>
-        </DialogActions>
-        <ScheduleFormDialog
-          open={dialog}
-          editSchedule={editSchedule}
-          onClose={onCloseDialog}
-        />
-      </Card> */}
       <Card>
         <DataGrid
           disableColumnMenu
           rows={data}
-          onRowClick={handleClickRow}
           pageSizeOptions={[10, 20, 50]}
+          loading={isLoading}
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 10,
+                pageSize: 20,
                 page: 0,
               },
             },
@@ -108,9 +40,25 @@ const Main = () => {
             {
               field: "startTime",
               headerName: "예약시간",
-              width: 200,
+              flex: 1,
               renderCell: params =>
                 dayjs(params.value as string).format("YYYY-MM-DD HH:mm"),
+            },
+            {
+              field: "dateFixed",
+              headerName: "예약상태",
+              width: 150,
+              renderCell: params => {
+                return (
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    color={!params.value ? "error" : undefined}
+                  >
+                    {params.value ? "결제완료" : "결제대기"}
+                  </Typography>
+                )
+              },
             },
           ]}
         />
