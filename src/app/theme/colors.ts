@@ -1,12 +1,12 @@
-import { alpha } from "@mui/material/styles";
+import { alpha } from "@mui/material/styles"
 
 interface CustomColor {
-  lightest: string;
-  light: string;
-  main: string;
-  dark: string;
-  darkest: string;
-  contrastText: string;
+  lightest: string
+  light: string
+  main: string
+  dark: string
+  darkest: string
+  contrastText: string
 }
 
 const withAlphas = (color: CustomColor) => {
@@ -17,8 +17,8 @@ const withAlphas = (color: CustomColor) => {
     alpha12: alpha(color.main, 0.12),
     alpha30: alpha(color.main, 0.3),
     alpha50: alpha(color.main, 0.5),
-  };
-};
+  }
+}
 
 export const neutral = {
   50: "#F8F9FA",
@@ -31,7 +31,7 @@ export const neutral = {
   700: "#2F3746",
   800: "#1C2536",
   900: "#111927",
-};
+}
 
 export const indigo = withAlphas({
   lightest: "#F5F7FF",
@@ -40,7 +40,7 @@ export const indigo = withAlphas({
   dark: "#4338CA",
   darkest: "#312E81",
   contrastText: "#FFFFFF",
-});
+})
 
 export const success = withAlphas({
   lightest: "#F0FDF9",
@@ -49,7 +49,7 @@ export const success = withAlphas({
   dark: "#0B815A",
   darkest: "#134E48",
   contrastText: "#FFFFFF",
-});
+})
 
 export const info = withAlphas({
   lightest: "#ECFDFF",
@@ -58,7 +58,7 @@ export const info = withAlphas({
   dark: "#0E7090",
   darkest: "#164C63",
   contrastText: "#FFFFFF",
-});
+})
 
 export const warning = withAlphas({
   lightest: "#FFFAEB",
@@ -67,7 +67,7 @@ export const warning = withAlphas({
   dark: "#B54708",
   darkest: "#7A2E0E",
   contrastText: "#FFFFFF",
-});
+})
 
 export const error = withAlphas({
   lightest: "#FEF3F2",
@@ -76,6 +76,4 @@ export const error = withAlphas({
   dark: "#B42318",
   darkest: "#7A271A",
   contrastText: "#FFFFFF",
-});
-
-export default {};
+})

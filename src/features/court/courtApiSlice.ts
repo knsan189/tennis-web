@@ -50,6 +50,7 @@ const courtApiSlice = createApi({
   endpoints: builder => ({
     getCourts: builder.query<GetCourtsResponse, void>({
       query: () => "court",
+      providesTags: ["courts"],
       transformResponse: (response: ApiServerResponse<GetCourtsResponse>) => {
         response.data.timestamp = new Date(
           response.data.timestamp,
@@ -57,9 +58,16 @@ const courtApiSlice = createApi({
         return response.data
       },
     }),
+    refreshCourts: builder.mutation<void, void>({
+      query: () => ({
+        url: "court/refresh",
+        method: "POST",
+      }),
+      invalidatesTags: ["courts"],
+    }),
   }),
   tagTypes: ["courts"],
 })
 
-export const { useGetCourtsQuery } = courtApiSlice
+export const { useGetCourtsQuery, useRefreshCourtsMutation } = courtApiSlice
 export default courtApiSlice

@@ -1,23 +1,17 @@
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import {
   type GroupedCourts,
   useGetCourtsQuery,
+  useRefreshCourtsMutation,
 } from "../features/court/courtApiSlice"
-import {
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Stack,
-  Typography,
-} from "@mui/material"
-import { Masonry } from "@mui/lab"
-import CourtSettingDialog from "../features/court/CourtSettingDialog"
+import { Card, CardHeader, Container, Stack } from "@mui/material"
+import { LoadingButton, Masonry } from "@mui/lab"
+
 import ReservationDateCard from "../features/reserve/ReservationDateCard"
 
 const Court = () => {
   const { data } = useGetCourtsQuery(undefined, { pollingInterval: 1000 * 60 })
-  const [open, setOpen] = useState(false)
+  const [refreshCourts, { isLoading }] = useRefreshCourtsMutation()
 
   const groupedCourts: GroupedCourts = useMemo(() => {
     if (!data) return {}
@@ -39,21 +33,27 @@ const Court = () => {
     return result
   }, [data])
 
-  const handleOpenSettings = () => setOpen(true)
-  const handleCloseSettings = () => setOpen(false)
+  const handleClickRefresh = () => {
+    refreshCourts()
+  }
 
   return (
     <Container>
       <Stack spacing={3}>
         <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              마지막 동기화 시간 : {data?.timestamp.toLocaleString()}
-            </Typography>
-            <Button onClick={handleOpenSettings}>코트 설정</Button>
-          </CardContent>
+          <CardHeader
+            title={`마지막 동기화 시간 : ${data?.timestamp.toLocaleString()}`}
+            action={
+              <LoadingButton
+                loading={isLoading}
+                variant="outlined"
+                onClick={handleClickRefresh}
+              >
+                새로고침
+              </LoadingButton>
+            }
+          />
         </Card>
-
         <Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 4 }} spacing={2}>
           {Object.entries(groupedCourts)
             .sort((a, b) => Number(a[0]) - Number(b[0]))
@@ -66,8 +66,6 @@ const Court = () => {
             ))}
         </Masonry>
       </Stack>
-
-      <CourtSettingDialog open={open} onClose={handleCloseSettings} />
     </Container>
   )
 }

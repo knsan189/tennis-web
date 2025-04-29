@@ -65,6 +65,7 @@ const Main = () => {
         Object.entries(groupedByWeek)
           .sort()
           .map(([weekKey, dates]) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const [_, month, week] = weekKey.split("-")
             return (
               <Stack key={weekKey} spacing={2}>

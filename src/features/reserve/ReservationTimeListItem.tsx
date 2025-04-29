@@ -5,7 +5,10 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material"
-import type { CourtAvailableTime } from "../court/courtApiSlice"
+import {
+  useRefreshCourtsMutation,
+  type CourtAvailableTime,
+} from "../court/courtApiSlice"
 import {
   useCheckReservationStatusQuery,
   useStartReservationMutation,
@@ -19,6 +22,7 @@ interface Props {
 
 const ReservationTimeListItem = ({ court, divider }: Props) => {
   const [reserveCourt] = useStartReservationMutation()
+  const [refreshCourts, { isLoading }] = useRefreshCourtsMutation()
   const [taskId, setTaskId] = useState<string | null>(null)
 
   const { data } = useCheckReservationStatusQuery(taskId ?? "", {
@@ -29,25 +33,14 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
   const handleClick = async () => {
     const response = await reserveCourt(court).unwrap()
     setTaskId(response.taskId)
-    // const startTime = new Date(court.year, court.month - 1, court.date)
-    // startTime.setHours(Number(court.time.split(":")[0]))
-    // const endTime = new Date(startTime)
-    // endTime.setHours(endTime.getHours() + 1)
-
-    // addSchedule({
-    //   name: court.courtName,
-    //   courtName: "새물공원",
-    //   startTime: startTime.toISOString(),
-    //   endTime: endTime.toISOString(),
-    //   dateFixed: false,
-    // })
   }
 
   useEffect(() => {
     if (data?.status === "completed") {
       setTaskId(null)
+      refreshCourts()
     }
-  }, [data])
+  }, [data, refreshCourts])
 
   return (
     <ListItem
@@ -63,8 +56,14 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
         )
       }
     >
-      <ListItemButton onClick={handleClick} disabled={taskId !== null}>
-        <ListItemText primary={court.courtName} secondary={data?.logs.length} />
+      <ListItemButton
+        onClick={handleClick}
+        disabled={taskId !== null || isLoading}
+      >
+        <ListItemText
+          primary={court.courtName}
+          secondary={taskId !== null ? data?.logs.length : null}
+        />
       </ListItemButton>
     </ListItem>
   )
