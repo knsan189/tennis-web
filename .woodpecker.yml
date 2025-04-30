@@ -4,7 +4,7 @@ steps:
     volumes:
       - /data/app:/app
     commands:
-      - cd /app
-      - ls
-      - npm install
+      - cd /app &&
+      - ls &&
+      - npm install &&
       - npm run build
