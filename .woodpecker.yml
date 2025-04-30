@@ -4,7 +4,6 @@ steps:
     volumes:
       - /data/app:/app
     commands:
-      - cd /app &&
-      - ls &&
+      - cd /app/tennis/web &&
       - npm install &&
       - npm run build
