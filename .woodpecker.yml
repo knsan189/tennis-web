@@ -1,3 +1,14 @@
+clone:
+  git:
+    image: woodpeckerci/plugin-git
+    volumes:
+      - /home/jin:/app
+      - /home/jin/.ssh:/root/.ssh:ro
+    commands:
+      - cd /app/tennis/web
+      - git config --system --add safe.directory /app/tennis/web
+      - git pull
+
 steps:
   - name: deploy
     image: node:lts
@@ -5,6 +16,5 @@ steps:
       - /home/jin:/app
     commands:
       - cd /app/tennis/web
-      - git pull
       - npm install
       - npm run build
