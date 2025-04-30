@@ -2,7 +2,7 @@ steps:
   - name: deploy
     image: node:lts
     volumes:
-      - /data/app:/app
+      - /home/jin:/app
     commands:
       - ls -l /app
       - cd /app/tennis/web
