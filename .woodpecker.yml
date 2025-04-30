@@ -5,6 +5,7 @@ steps:
       - /data/app:/app
     commands:
       - ls -l /app
+      - ls -l /data/app
       - cd /app/tennis/web &&
       - npm install &&
       - npm run build
