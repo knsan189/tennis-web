@@ -1,6 +1,6 @@
-pipeline:
-  deploy:
-    image: node:latest
+steps:
+  - name: deploy
+    image: node:lts
     volumes:
       - /data/app:/app
     commands:
