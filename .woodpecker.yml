@@ -4,7 +4,7 @@ steps:
     volumes:
       - /home/jin:/app
     commands:
-      - ls -l /app
       - cd /app/tennis/web
+      - git pull
       - npm install
       - npm run build
