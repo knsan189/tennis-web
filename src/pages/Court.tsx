@@ -1,6 +1,4 @@
-import { useMemo } from "react"
 import {
-  type GroupedCourts,
   useGetCourtsQuery,
   useRefreshCourtsMutation,
 } from "../features/court/courtApiSlice"
@@ -8,42 +6,12 @@ import { Box, Card, Grid2, Skeleton, Stack, Typography } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
 import ReservationDateCard from "../features/reserve/ReservationDateCard"
 import { Refresh } from "@mui/icons-material"
-import { getWeekOfMonth } from "date-fns"
-import useCheckAdmin from "../features/reserve/hooks/useCheckAdmin"
 
 const Court = () => {
-  const { isAdmin } = useCheckAdmin()
-  const { data } = useGetCourtsQuery(undefined, { pollingInterval: 1000 * 60 })
+  const { data } = useGetCourtsQuery(undefined, {
+    pollingInterval: 1000 * 60,
+  })
   const [refreshCourts, { isLoading }] = useRefreshCourtsMutation()
-
-  const groupedByWeek = useMemo(() => {
-    if (!data?.availableTimes) return {}
-
-    const result: Record<string, GroupedCourts> = {}
-
-    for (const court of data.availableTimes) {
-      const date = new Date(court.year, court.month - 1, court.date)
-      const week = getWeekOfMonth(date, { weekStartsOn: 1 }) // 월요일 시작으로 주차 계산
-
-      const weekKey = `${court.year}-${court.month}-${week}` // ex) "2025-5-1"
-
-      if (!result[weekKey]) {
-        result[weekKey] = {}
-      }
-
-      const dateKey = date.getTime() // 날짜별로 다시 그룹핑
-      if (!result[weekKey][dateKey]) {
-        result[weekKey][dateKey] = {}
-      }
-      if (!result[weekKey][dateKey][court.time]) {
-        result[weekKey][dateKey][court.time] = []
-      }
-
-      result[weekKey][dateKey][court.time].push(court)
-    }
-
-    return result
-  }, [data])
 
   const handleClickRefresh = () => {
     refreshCourts()
@@ -63,7 +31,6 @@ const Court = () => {
           variant="contained"
           onClick={handleClickRefresh}
           startIcon={<Refresh />}
-          disabled={!isAdmin}
         >
           새로고침
         </LoadingButton>
@@ -90,7 +57,7 @@ const Court = () => {
               </Grid2>
             </Stack>
           ))
-        : Object.entries(groupedByWeek)
+        : Object.entries(data?.grouped ?? {})
             .sort()
             .map(([weekKey, dates]) => {
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
