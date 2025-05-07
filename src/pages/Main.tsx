@@ -69,15 +69,28 @@ const Main = () => {
         ? Array.from({ length: 3 }, (_, weekIndex) => (
             <Stack key={weekIndex} spacing={2}>
               {/* 주차 제목 스켈레톤 */}
-              <Skeleton variant="text" width="30%" height={40} />
+              <Typography variant="h6" gutterBottom>
+                <Skeleton variant="text" width={80} />
+              </Typography>
               <Grid2 container spacing={2}>
                 {Array.from({ length: 4 }, (_, dateIndex) => (
                   <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={dateIndex}>
                     <Card>
                       <Stack spacing={1} padding={2}>
-                        <Skeleton variant="text" width="50%" />
-                        <Skeleton variant="text" width="80%" />
-                        <Skeleton variant="text" width="60%" />
+                        <Typography variant="subtitle1">
+                          <Skeleton variant="text" width="50%" />
+                        </Typography>
+                        <Divider />
+                        <Stack spacing={1}>
+                          <Typography variant="subtitle2">
+                            <Skeleton variant="text" width="80%" />
+                          </Typography>
+                          <Paper variant="outlined">
+                            <Box py={1} px={2}>
+                              <Skeleton variant="text" width="60%" />
+                            </Box>
+                          </Paper>
+                        </Stack>
                       </Stack>
                     </Card>
                   </Grid2>

@@ -8,10 +8,11 @@ import ReservationDateCard from "../features/reserve/ReservationDateCard"
 import { Refresh } from "@mui/icons-material"
 
 const Court = () => {
-  const { data } = useGetCourtsQuery(undefined, {
+  const { data, isLoading } = useGetCourtsQuery(undefined, {
     pollingInterval: 1000 * 60,
   })
-  const [refreshCourts, { isLoading }] = useRefreshCourtsMutation()
+  const [refreshCourts, { isLoading: isRefreshLoading }] =
+    useRefreshCourtsMutation()
 
   const handleClickRefresh = () => {
     refreshCourts()
@@ -21,13 +22,15 @@ const Court = () => {
     <Stack spacing={4}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Box>
-          <Typography variant="h5">실시간 코트 현황</Typography>
+          <Typography variant="h5" gutterBottom>
+            실시간 코트 현황
+          </Typography>
           <Typography variant="subtitle2" color="text.secondary">
-            {`${data?.timestamp} 기준`}
+            {!isLoading ? `${data?.timestamp} 기준` : <Skeleton width={200} />}
           </Typography>
         </Box>
         <LoadingButton
-          loading={isLoading}
+          loading={isLoading || isRefreshLoading}
           variant="contained"
           onClick={handleClickRefresh}
           startIcon={<Refresh />}
