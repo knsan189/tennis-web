@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { getWeekOfMonth } from "date-fns"
+import { groupCourtsByWeek, type GroupedCourts } from "./utils/groupCourts"
 
 export interface DateInfo {
   month: number
@@ -42,33 +42,6 @@ interface GetCourtsResponse {
   size: number
 }
 
-export type GroupedCourts = Record<number, Record<string, CourtAvailableTime[]>>
-
-const groupCourtsByWeek = (respones: GetCourtsResponse) => {
-  const result: Record<string, GroupedCourts> = {}
-  for (const court of respones.availableTimes) {
-    const date = new Date(court.year, court.month - 1, court.date)
-    const week = getWeekOfMonth(date, { weekStartsOn: 1 }) // 월요일 시작으로 주차 계산
-
-    const weekKey = `${court.year}-${court.month}-${week}` // ex) "2025-5-1"
-
-    if (!result[weekKey]) {
-      result[weekKey] = {}
-    }
-
-    const dateKey = date.getTime() // 날짜별로 다시 그룹핑
-    if (!result[weekKey][dateKey]) {
-      result[weekKey][dateKey] = {}
-    }
-    if (!result[weekKey][dateKey][court.time]) {
-      result[weekKey][dateKey][court.time] = []
-    }
-
-    result[weekKey][dateKey][court.time].push(court)
-  }
-  return result
-}
-
 const courtApiSlice = createApi({
   reducerPath: "courtApi",
   baseQuery: fetchBaseQuery({
@@ -82,8 +55,7 @@ const courtApiSlice = createApi({
         response.data.timestamp = new Date(
           response.data.timestamp,
         ).toLocaleString()
-        response.data.grouped = groupCourtsByWeek(response.data)
-
+        response.data.grouped = groupCourtsByWeek(response.data.availableTimes)
         return response.data
       },
     }),

@@ -9,42 +9,11 @@ import {
   Typography,
 } from "@mui/material"
 import { useGetMyReservationsQuery } from "../features/reserve/reserveApiSlice"
-import { useMemo } from "react"
-import type { GroupedCourts } from "../features/court/courtApiSlice"
-import { format, getWeekOfMonth } from "date-fns"
+import { format } from "date-fns"
 import { ko } from "date-fns/locale"
 
 const Main = () => {
-  const { data = [], isLoading } = useGetMyReservationsQuery(undefined)
-
-  const groupedByWeek = useMemo(() => {
-    if (!data.length) return {}
-
-    const result: Record<string, GroupedCourts> = {}
-
-    for (const court of data) {
-      const date = new Date(court.year, court.month - 1, court.date)
-      const week = getWeekOfMonth(date, { weekStartsOn: 1 }) // 월요일 시작으로 주차 계산
-
-      const weekKey = `${court.year}-${court.month}-${week}` // ex) "2025-5-1"
-
-      if (!result[weekKey]) {
-        result[weekKey] = {}
-      }
-
-      const dateKey = date.getTime() // 날짜별로 다시 그룹핑
-      if (!result[weekKey][dateKey]) {
-        result[weekKey][dateKey] = {}
-      }
-      if (!result[weekKey][dateKey][court.time]) {
-        result[weekKey][dateKey][court.time] = []
-      }
-
-      result[weekKey][dateKey][court.time].push(court)
-    }
-
-    return result
-  }, [data])
+  const { data, isLoading } = useGetMyReservationsQuery(undefined)
 
   return (
     <Stack spacing={4}>
@@ -64,7 +33,6 @@ const Main = () => {
           </Typography>
         </Box>
       </Box>
-
       {isLoading
         ? Array.from({ length: 3 }, (_, weekIndex) => (
             <Stack key={weekIndex} spacing={2}>
@@ -76,18 +44,28 @@ const Main = () => {
                 {Array.from({ length: 4 }, (_, dateIndex) => (
                   <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={dateIndex}>
                     <Card>
-                      <Stack spacing={1} padding={2}>
+                      <Stack spacing={2} p={2}>
                         <Typography variant="subtitle1">
-                          <Skeleton variant="text" width="50%" />
+                          <Skeleton variant="text" width={60} />
                         </Typography>
                         <Divider />
                         <Stack spacing={1}>
                           <Typography variant="subtitle2">
-                            <Skeleton variant="text" width="80%" />
+                            <Skeleton variant="text" width={50} />
                           </Typography>
                           <Paper variant="outlined">
                             <Box py={1} px={2}>
-                              <Skeleton variant="text" width="60%" />
+                              <Skeleton variant="text" width={80} />
+                            </Box>
+                          </Paper>
+                        </Stack>
+                        <Stack spacing={1}>
+                          <Typography variant="subtitle2">
+                            <Skeleton variant="text" width={50} />
+                          </Typography>
+                          <Paper variant="outlined">
+                            <Box py={1} px={2}>
+                              <Skeleton variant="text" width={80} />
                             </Box>
                           </Paper>
                         </Stack>
@@ -98,7 +76,7 @@ const Main = () => {
               </Grid2>
             </Stack>
           ))
-        : Object.entries(groupedByWeek)
+        : Object.entries(data ?? {})
             .sort()
             .map(([weekKey, dates]) => {
               // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,5 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import type { CourtAvailableTime } from "../court/courtApiSlice"
+import {
+  groupCourtsByWeek,
+  type GroupedCourts,
+} from "../court/utils/groupCourts"
 
 interface Task {
   status: "pending" | "completed"
@@ -31,15 +35,17 @@ const reserveApilSlice = createApi({
         method: "GET",
       }),
     }),
-    getMyReservations: builder.query<CourtAvailableTime[], void>({
+    getMyReservations: builder.query<Record<string, GroupedCourts>, void>({
       query: () => ({
         url: "reserve/mylist",
         method: "GET",
       }),
-      transformResponse: (response: CourtAvailableTime[]) =>
+      transformResponse: (response: CourtAvailableTime[]) => {
         response.sort((a, b) => {
           return a.startTime.toString().localeCompare(b.startTime.toString())
-        }),
+        })
+        return groupCourtsByWeek(response)
+      },
     }),
   }),
 })
