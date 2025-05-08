@@ -60,7 +60,18 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
         onClick={handleClick}
         disabled={taskId !== null || isLoading}
       >
-        <ListItemText primary={court.courtName} />
+        <ListItemText
+          primary={court.courtName}
+          slotProps={{
+            primary: {
+              fontWeight: ["1", "4", "5", "8"].some(num =>
+                court.courtName.includes(num),
+              )
+                ? "bold"
+                : undefined,
+            },
+          }}
+        />
       </ListItemButton>
     </ListItem>
   )
