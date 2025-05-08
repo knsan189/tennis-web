@@ -16,12 +16,12 @@ const Bottom = () => {
         onChange={(_, value) => navigate(value)}
       >
         <BottomNavigationAction
-          label="일정 관리"
+          label="일정 확인"
           icon={<Schedule />}
           value="/"
         />
         <BottomNavigationAction
-          label="코트 확인"
+          label="코트 예약"
           icon={<SportsTennis />}
           value="/court"
         />
