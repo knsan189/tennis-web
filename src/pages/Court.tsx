@@ -6,11 +6,14 @@ import { Box, Card, Grid2, Skeleton, Stack, Typography } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
 import ReservationDateCard from "../features/reserve/ReservationDateCard"
 import { Refresh } from "@mui/icons-material"
+import { useGetMyReservationsQuery } from "../features/reserve/reserveApiSlice"
 
 const Court = () => {
   const { data, isLoading } = useGetCourtsQuery(undefined, {
     pollingInterval: 1000 * 60,
   })
+  const { data: myList = {} } = useGetMyReservationsQuery()
+
   const [refreshCourts, { isLoading: isRefreshLoading }] =
     useRefreshCourtsMutation()
 
@@ -63,8 +66,8 @@ const Court = () => {
         : Object.entries(data?.grouped ?? {})
             .sort()
             .map(([weekKey, dates]) => {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const [_, month, week] = weekKey.split("-")
+              const [, month, week] = weekKey.split("-")
+
               return (
                 <Stack key={weekKey} spacing={2}>
                   <Typography
@@ -82,6 +85,7 @@ const Court = () => {
                           <ReservationDateCard
                             date={date}
                             timeslots={timeslots}
+                            reseveredTimeslots={myList[weekKey]?.[Number(date)]}
                           />
                         </Grid2>
                       ))}

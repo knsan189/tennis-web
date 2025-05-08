@@ -7,10 +7,16 @@ import ReservationTimeList from "./ReservationTimeList"
 interface Props {
   date: string
   timeslots: Record<string, CourtAvailableTime[]>
+  reseveredTimeslots?: Record<string, CourtAvailableTime[]>
 }
 
-const ReservationDateCard = ({ date, timeslots }: Props) => {
+const ReservationDateCard = ({
+  date,
+  timeslots,
+  reseveredTimeslots,
+}: Props) => {
   const formattedDate = format(Number(date), "MMM do (E)", { locale: ko })
+
   return (
     <Card>
       <CardHeader title={formattedDate} />
