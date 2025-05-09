@@ -1,10 +1,10 @@
 import { Typography, Paper, List } from "@mui/material"
-import type { CourtAvailableTime } from "../court/courtApiSlice"
+import type { ReservedCourt } from "../court/courtApiSlice"
 import ReservationTimeListItem from "./ReservationTimeListItem"
 
 interface Props {
   time: string
-  courts: CourtAvailableTime[]
+  courts: ReservedCourt[]
 }
 
 const ReservationTimeList = ({ time, courts }: Props) => {

@@ -1,9 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import type { CourtAvailableTime } from "../court/courtApiSlice"
-import {
-  groupCourtsByWeek,
-  type GroupedCourts,
-} from "../court/utils/groupCourts"
+import type { ReservedCourt } from "../court/courtApiSlice"
 
 interface Task {
   status: "pending" | "completed"
@@ -23,28 +19,27 @@ const reserveApilSlice = createApi({
     baseUrl: import.meta.env.VITE_RESERVE_API_SERVER_URL,
   }),
   endpoints: builder => ({
-    startReservation: builder.mutation<
-      StartReservationResponse,
-      CourtAvailableTime
-    >({
-      query: request => ({ url: "reserve", body: request, method: "POST" }),
-    }),
+    startReservation: builder.mutation<StartReservationResponse, ReservedCourt>(
+      {
+        query: request => ({ url: "reserve", body: request, method: "POST" }),
+      },
+    ),
     checkReservationStatus: builder.query<Task, string>({
       query: taskId => ({
         url: `reserve/status/${taskId}`,
         method: "GET",
       }),
     }),
-    getMyReservations: builder.query<Record<string, GroupedCourts>, void>({
+    getMyReservations: builder.query<ReservedCourt[], void>({
       query: () => ({
         url: "reserve/mylist",
         method: "GET",
       }),
-      transformResponse: (response: CourtAvailableTime[]) => {
+      transformResponse: (response: ReservedCourt[]) => {
         response.sort((a, b) => {
           return a.startTime.toString().localeCompare(b.startTime.toString())
         })
-        return groupCourtsByWeek(response)
+        return response
       },
     }),
   }),

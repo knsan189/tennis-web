@@ -1,9 +1,9 @@
 import { getWeekOfMonth } from "date-fns"
-import type { CourtAvailableTime } from "../courtApiSlice"
+import type { ReservedCourt } from "../courtApiSlice"
 
-export type GroupedCourts = Record<number, Record<string, CourtAvailableTime[]>>
+export type GroupedCourts = Record<number, Record<string, ReservedCourt[]>>
 
-export const groupCourtsByWeek = (courts: CourtAvailableTime[]) => {
+export const groupCourtsByWeek = (courts: ReservedCourt[]) => {
   const result: Record<string, GroupedCourts> = {}
   for (const court of courts) {
     const date = new Date(court.year, court.month - 1, court.date)

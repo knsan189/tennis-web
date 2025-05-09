@@ -11,9 +11,15 @@ import {
 import { useGetMyReservationsQuery } from "../features/reserve/reserveApiSlice"
 import { format } from "date-fns"
 import { ko } from "date-fns/locale"
+import { useMemo } from "react"
+import { groupCourtsByWeek } from "../features/court/utils/groupCourts"
 
 const Main = () => {
-  const { data, isLoading } = useGetMyReservationsQuery(undefined)
+  const { data = [], isLoading } = useGetMyReservationsQuery(undefined)
+
+  const grouedCourts = useMemo(() => {
+    return groupCourtsByWeek(data)
+  }, [data])
 
   return (
     <Stack spacing={4}>
@@ -76,7 +82,7 @@ const Main = () => {
               </Grid2>
             </Stack>
           ))
-        : Object.entries(data ?? {})
+        : Object.entries(grouedCourts)
             .sort()
             .map(([weekKey, dates]) => {
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -128,12 +134,12 @@ const Main = () => {
                                             component="span"
                                             variant="caption"
                                             color={
-                                              court.dateFixed
+                                              !court.status?.isPaid
                                                 ? "text.secondary"
                                                 : "error"
                                             }
                                           >
-                                            {court.dateFixed
+                                            {!court.status?.isPaid
                                               ? "결제 완료"
                                               : "결제 대기"}
                                           </Typography>

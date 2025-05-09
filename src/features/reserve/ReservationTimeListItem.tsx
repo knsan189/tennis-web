@@ -7,7 +7,7 @@ import {
 } from "@mui/material"
 import {
   useRefreshCourtsMutation,
-  type CourtAvailableTime,
+  type ReservedCourt,
 } from "../court/courtApiSlice"
 import {
   useCheckReservationStatusQuery,
@@ -16,7 +16,7 @@ import {
 import { useEffect, useState } from "react"
 
 interface Props {
-  court: CourtAvailableTime
+  court: ReservedCourt
   divider: boolean
 }
 
@@ -58,7 +58,7 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
     >
       <ListItemButton
         onClick={handleClick}
-        disabled={taskId !== null || isLoading}
+        disabled={taskId !== null || isLoading || court.status !== undefined}
       >
         <ListItemText
           primary={court.courtName}

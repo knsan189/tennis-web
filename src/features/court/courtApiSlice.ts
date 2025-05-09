@@ -1,33 +1,24 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { groupCourtsByWeek, type GroupedCourts } from "./utils/groupCourts"
 
-export interface DateInfo {
-  month: number
-  year: number
-  date: number
+export interface ReservationMeta {
+  isPaid: boolean // 결제 완료 여부
+  pageIndex: number
+  rowIndex: number // 예약 목록에서의 행 인덱스
 }
 
-export interface CourtAvailableTime extends DateInfo {
-  id: string
-
+export interface ReservedCourt {
+  year: number
+  month: number
+  date: number
   time: string
-
-  /** 코트 이름  ex) 테니스장1 */
   courtName: string
-
-  /** 공원 타입 */
   courtType: string
-
-  /** 코트 ID */
   courtNumber: string
-
   url: string
-
   startTime: Date
-
   endTime: Date
-
-  dateFixed: boolean
+  id: string
+  status?: ReservationMeta
 }
 
 interface ApiServerResponse<T = unknown> {
@@ -36,8 +27,7 @@ interface ApiServerResponse<T = unknown> {
 }
 
 interface GetCourtsResponse {
-  grouped: Record<string, GroupedCourts>
-  availableTimes: CourtAvailableTime[]
+  availableTimes: ReservedCourt[]
   timestamp: string
   size: number
 }
@@ -55,7 +45,6 @@ const courtApiSlice = createApi({
         response.data.timestamp = new Date(
           response.data.timestamp,
         ).toLocaleString()
-        response.data.grouped = groupCourtsByWeek(response.data.availableTimes)
         return response.data
       },
     }),

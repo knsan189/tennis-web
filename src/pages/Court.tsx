@@ -2,17 +2,34 @@ import {
   useGetCourtsQuery,
   useRefreshCourtsMutation,
 } from "../features/court/courtApiSlice"
-import { Box, Card, Grid2, Skeleton, Stack, Typography } from "@mui/material"
+import {
+  Box,
+  Card,
+  Checkbox,
+  FormControlLabel,
+  Grid2,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material"
 import { LoadingButton } from "@mui/lab"
 import ReservationDateCard from "../features/reserve/ReservationDateCard"
 import { Refresh } from "@mui/icons-material"
 import { useGetMyReservationsQuery } from "../features/reserve/reserveApiSlice"
+import { useMemo } from "react"
+import { groupCourtsByWeek } from "../features/court/utils/groupCourts"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import {
+  selectShowReservedCourts,
+  toggleShowReservedCourts,
+} from "../features/config/configSlice"
 
 const Court = () => {
+  const showReservedCourts = useAppSelector(selectShowReservedCourts)
   const { data, isLoading } = useGetCourtsQuery(undefined, {
     pollingInterval: 1000 * 60,
   })
-  const { data: myList = {} } = useGetMyReservationsQuery()
+  const { data: myList = [] } = useGetMyReservationsQuery()
 
   const [refreshCourts, { isLoading: isRefreshLoading }] =
     useRefreshCourtsMutation()
@@ -20,6 +37,15 @@ const Court = () => {
   const handleClickRefresh = () => {
     refreshCourts()
   }
+
+  const groupedCourt = useMemo(() => {
+    if (!showReservedCourts) {
+      return groupCourtsByWeek(data?.availableTimes || [])
+    }
+    return groupCourtsByWeek([...(data?.availableTimes || []), ...myList])
+  }, [data, myList, showReservedCourts])
+
+  const dispatch = useAppDispatch()
 
   return (
     <Stack spacing={4}>
@@ -32,14 +58,24 @@ const Court = () => {
             {!isLoading ? `${data?.timestamp} 기준` : <Skeleton width={200} />}
           </Typography>
         </Box>
-        <LoadingButton
-          loading={isLoading || isRefreshLoading}
-          variant="contained"
-          onClick={handleClickRefresh}
-          startIcon={<Refresh />}
-        >
-          새로고침
-        </LoadingButton>
+        <Box display="flex" alignItems="center">
+          <FormControlLabel
+            control={<Checkbox checked={showReservedCourts} />}
+            label="예약된 코트 같이보기"
+            onChange={e => {
+              dispatch(toggleShowReservedCourts())
+            }}
+          />
+
+          <LoadingButton
+            loading={isLoading || isRefreshLoading}
+            variant="contained"
+            onClick={handleClickRefresh}
+            startIcon={<Refresh />}
+          >
+            새로고침
+          </LoadingButton>
+        </Box>
       </Box>
 
       {isLoading
@@ -63,11 +99,10 @@ const Court = () => {
               </Grid2>
             </Stack>
           ))
-        : Object.entries(data?.grouped ?? {})
+        : Object.entries(groupedCourt)
             .sort()
             .map(([weekKey, dates]) => {
               const [, month, week] = weekKey.split("-")
-
               return (
                 <Stack key={weekKey} spacing={2}>
                   <Typography
@@ -85,7 +120,6 @@ const Court = () => {
                           <ReservationDateCard
                             date={date}
                             timeslots={timeslots}
-                            reseveredTimeslots={myList[weekKey]?.[Number(date)]}
                           />
                         </Grid2>
                       ))}
