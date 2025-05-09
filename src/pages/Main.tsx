@@ -13,6 +13,7 @@ import { format } from "date-fns"
 import { ko } from "date-fns/locale"
 import { useMemo } from "react"
 import { groupCourtsByWeek } from "../features/court/utils/groupCourts"
+import ReservationDetailDialog from "../features/reserve/ReservationDetailDialog"
 
 const Main = () => {
   const { data = [], isLoading } = useGetMyReservationsQuery(undefined)
@@ -157,6 +158,7 @@ const Main = () => {
                 </Stack>
               )
             })}
+      <ReservationDetailDialog />
     </Stack>
   )
 }

@@ -5,6 +5,7 @@ import baseApi from "../features/baseApi"
 import courtApiSlice from "../features/court/courtApiSlice"
 import reserveApilSlice from "../features/reserve/reserveApiSlice"
 import configSlice from "../features/config/configSlice"
+import reservationSlice from "../features/reserve/reservationSlice"
 
 // `combineSlices` automatically combines the reducers using
 // their `reducerPath`s, therefore we no longer need to call `combineReducers`.
@@ -13,6 +14,7 @@ const rootReducer = combineSlices(
   courtApiSlice,
   reserveApilSlice,
   configSlice,
+  reservationSlice,
 )
 // Infer the `RootState` type from the root reducer
 export type RootState = ReturnType<typeof rootReducer>
