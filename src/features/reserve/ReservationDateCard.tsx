@@ -16,7 +16,7 @@ const ReservationDateCard = ({ date, timeslots }: Props) => {
     <Card>
       <CardHeader title={formattedDate} />
       <CardContent sx={{ pt: 1 }}>
-        <Stack spacing={2}>
+        <Stack spacing={1}>
           {Object.entries(timeslots)
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map(([time, courts]) => (

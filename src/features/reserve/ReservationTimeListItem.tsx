@@ -14,6 +14,7 @@ import {
   useStartReservationMutation,
 } from "./reserveApiSlice"
 import { useEffect, useState } from "react"
+import { CalendarIcon } from "@mui/x-date-pickers"
 
 interface Props {
   court: ReservedCourt
@@ -42,6 +43,8 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
     }
   }, [data, refreshCourts])
 
+  const isReserved = Boolean(court.status)
+
   return (
     <ListItem
       key={court.id}
@@ -49,21 +52,23 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
       disablePadding
       disableGutters
       secondaryAction={
-        taskId !== null && (
+        taskId !== null ||
+        (isLoading && (
           <Box pr={2}>
             <CircularProgress size={15} />
           </Box>
-        )
+        ))
       }
     >
       <ListItemButton
         onClick={handleClick}
-        disabled={taskId !== null || isLoading || court.status !== undefined}
+        disabled={taskId !== null || isLoading || isReserved}
       >
         <ListItemText
           primary={court.courtName}
           slotProps={{
             primary: {
+              color: !isReserved ? "text.primary" : "text.secondary",
               fontWeight: ["1", "4", "5", "8"].some(num =>
                 court.courtName.includes(num),
               )
@@ -72,6 +77,7 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
             },
           }}
         />
+        {!isReserved && <CalendarIcon color="primary" />}
       </ListItemButton>
     </ListItem>
   )
