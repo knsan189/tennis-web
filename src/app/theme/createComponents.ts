@@ -336,6 +336,18 @@ const createComponents = (
         },
       },
     },
+    MuiListItem: {
+      defaultProps: {
+        disablePadding: true,
+        disableGutters: true,
+      },
+    },
+    MuiList: {
+      defaultProps: {
+        dense: true,
+        disablePadding: true,
+      },
+    },
   }
 }
 

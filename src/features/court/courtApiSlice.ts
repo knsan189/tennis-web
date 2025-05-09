@@ -4,6 +4,8 @@ export interface ReservationMeta {
   isPaid: boolean // 결제 완료 여부
   pageIndex: number
   rowIndex: number // 예약 목록에서의 행 인덱스
+  /** yyyyMMdd */
+  reservedDate: string // 예약 날짜
 }
 
 export interface ReservedCourt {

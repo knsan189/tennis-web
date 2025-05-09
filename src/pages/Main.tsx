@@ -3,6 +3,10 @@ import {
   Card,
   Divider,
   Grid2,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
   Paper,
   Skeleton,
   Stack,
@@ -14,6 +18,8 @@ import { ko } from "date-fns/locale"
 import { useMemo } from "react"
 import { groupCourtsByWeek } from "../features/court/utils/groupCourts"
 import ReservationDetailDialog from "../features/reserve/ReservationDetailDialog"
+import { setSelectedReservation } from "../features/reserve/reservationSlice"
+import { useAppDispatch } from "../app/hooks"
 
 const Main = () => {
   const { data = [], isLoading } = useGetMyReservationsQuery(undefined)
@@ -21,6 +27,8 @@ const Main = () => {
   const grouedCourts = useMemo(() => {
     return groupCourtsByWeek(data)
   }, [data])
+
+  const dispatch = useAppDispatch()
 
   return (
     <Stack spacing={4}>
@@ -119,34 +127,40 @@ const Main = () => {
                                     >
                                       {time}
                                     </Typography>
-                                    {courts.map(court => (
-                                      <Paper key={court.id} variant="outlined">
-                                        <Box
-                                          py={1}
-                                          px={2}
-                                          display="flex"
-                                          alignItems="center"
-                                          justifyContent="space-between"
-                                        >
-                                          <Typography variant="body2">
-                                            {court.courtName}
-                                          </Typography>
-                                          <Typography
-                                            component="span"
-                                            variant="caption"
-                                            color={
-                                              !court.status?.isPaid
-                                                ? "text.secondary"
-                                                : "error"
-                                            }
+                                    <Paper variant="outlined">
+                                      <List>
+                                        {courts.map((court, i) => (
+                                          <ListItem
+                                            key={court.id}
+                                            divider={i !== courts.length - 1}
                                           >
-                                            {!court.status?.isPaid
-                                              ? "결제 완료"
-                                              : "결제 대기"}
-                                          </Typography>
-                                        </Box>
-                                      </Paper>
-                                    ))}
+                                            <ListItemButton
+                                              onClick={() =>
+                                                dispatch(
+                                                  setSelectedReservation(court),
+                                                )
+                                              }
+                                            >
+                                              <ListItemText
+                                                primary={court.courtName}
+                                              />
+                                              <Typography
+                                                variant="caption"
+                                                color={
+                                                  !court.status?.isPaid
+                                                    ? "text.secondary"
+                                                    : "error"
+                                                }
+                                              >
+                                                {!court.status?.isPaid
+                                                  ? "결제 완료"
+                                                  : "결제 대기"}
+                                              </Typography>
+                                            </ListItemButton>
+                                          </ListItem>
+                                        ))}
+                                      </List>
+                                    </Paper>
                                   </Stack>
                                 ),
                               )}

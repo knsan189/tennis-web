@@ -1,22 +1,22 @@
 import { Typography, Paper, List } from "@mui/material"
-import type { ReservedCourt } from "../court/courtApiSlice"
-import ReservationTimeListItem from "./ReservationTimeListItem"
+import type { ReservedCourt } from "./courtApiSlice"
+import CourtTimeListItem from "./CourtTimeListItem"
 
 interface Props {
   time: string
   courts: ReservedCourt[]
 }
 
-const ReservationTimeList = ({ time, courts }: Props) => {
+const CourtTimeList = ({ time, courts }: Props) => {
   return (
     <div>
       <Typography variant="subtitle1" gutterBottom>
         {time}
       </Typography>
       <Paper variant="outlined">
-        <List dense disablePadding>
+        <List>
           {courts.map((court, i) => (
-            <ReservationTimeListItem
+            <CourtTimeListItem
               key={court.id}
               court={court}
               divider={i !== courts.length - 1}
@@ -28,4 +28,4 @@ const ReservationTimeList = ({ time, courts }: Props) => {
   )
 }
 
-export default ReservationTimeList
+export default CourtTimeList

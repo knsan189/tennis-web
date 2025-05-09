@@ -5,14 +5,11 @@ import {
   ListItemButton,
   ListItemText,
 } from "@mui/material"
-import {
-  useRefreshCourtsMutation,
-  type ReservedCourt,
-} from "../court/courtApiSlice"
+import { useRefreshCourtsMutation, type ReservedCourt } from "./courtApiSlice"
 import {
   useCheckReservationStatusQuery,
   useStartReservationMutation,
-} from "./reserveApiSlice"
+} from "../reserve/reserveApiSlice"
 import { useEffect, useState } from "react"
 import { CalendarIcon } from "@mui/x-date-pickers"
 
@@ -21,7 +18,7 @@ interface Props {
   divider: boolean
 }
 
-const ReservationTimeListItem = ({ court, divider }: Props) => {
+const CourtTimeListItem = ({ court, divider }: Props) => {
   const [reserveCourt] = useStartReservationMutation()
   const [refreshCourts, { isLoading }] = useRefreshCourtsMutation()
   const [taskId, setTaskId] = useState<string | null>(null)
@@ -49,8 +46,6 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
     <ListItem
       key={court.id}
       divider={divider}
-      disablePadding
-      disableGutters
       secondaryAction={
         taskId !== null ||
         (isLoading && (
@@ -83,4 +78,4 @@ const ReservationTimeListItem = ({ court, divider }: Props) => {
   )
 }
 
-export default ReservationTimeListItem
+export default CourtTimeListItem

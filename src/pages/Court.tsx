@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
-import ReservationDateCard from "../features/reserve/ReservationDateCard"
+import CourtDateCard from "../features/court/CourtDateCard"
 import { Refresh } from "@mui/icons-material"
 import { useGetMyReservationsQuery } from "../features/reserve/reserveApiSlice"
 import { useMemo } from "react"
@@ -126,10 +126,7 @@ const Court = () => {
                           size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
                           key={date}
                         >
-                          <ReservationDateCard
-                            date={date}
-                            timeslots={timeslots}
-                          />
+                          <CourtDateCard date={date} timeslots={timeslots} />
                         </Grid2>
                       ))}
                   </Grid2>
