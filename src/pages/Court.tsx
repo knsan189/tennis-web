@@ -58,24 +58,33 @@ const Court = () => {
             {!isLoading ? `${data?.timestamp} 기준` : <Skeleton width={200} />}
           </Typography>
         </Box>
-        <Box display="flex" alignItems="center">
-          <FormControlLabel
-            control={<Checkbox checked={showReservedCourts} />}
-            label="예약된 코트 같이보기"
-            onChange={e => {
-              dispatch(toggleShowReservedCourts())
-            }}
-          />
 
-          <LoadingButton
-            loading={isLoading || isRefreshLoading}
-            variant="contained"
-            onClick={handleClickRefresh}
-            startIcon={<Refresh />}
-          >
-            새로고침
-          </LoadingButton>
-        </Box>
+        <LoadingButton
+          loading={isLoading || isRefreshLoading}
+          variant="contained"
+          onClick={handleClickRefresh}
+          startIcon={<Refresh />}
+        >
+          새로고침
+        </LoadingButton>
+      </Box>
+
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="end"
+        position="sticky"
+        top={0}
+        bgcolor="background.paper"
+        zIndex={2}
+      >
+        <FormControlLabel
+          control={<Checkbox checked={showReservedCourts} />}
+          label="예약된 코트 같이보기"
+          onChange={e => {
+            dispatch(toggleShowReservedCourts())
+          }}
+        />
       </Box>
 
       {isLoading
