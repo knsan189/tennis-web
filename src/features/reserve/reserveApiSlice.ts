@@ -14,10 +14,10 @@ const reserveApilSlice = createApi({
   reducerPath: "reserveApi",
   tagTypes: ["myReservations"],
   baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.DEV
-      ? "http://localhost:4000"
-      : import.meta.env.VITE_RESERVE_API_SERVER_URL,
-    // baseUrl: import.meta.env.VITE_RESERVE_API_SERVER_URL,
+    // baseUrl: import.meta.env.DEV
+    //   ? "http://localhost:4000"
+    //   : import.meta.env.VITE_RESERVE_API_SERVER_URL,
+    baseUrl: import.meta.env.VITE_RESERVE_API_SERVER_URL,
   }),
   endpoints: builder => ({
     startReservation: builder.mutation<StartReservationResponse, ReservedCourt>(

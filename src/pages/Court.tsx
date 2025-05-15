@@ -13,7 +13,6 @@ import {
   Typography,
 } from "@mui/material"
 import { LoadingButton } from "@mui/lab"
-import CourtDateCard from "../features/court/CourtDateCard"
 import { Refresh } from "@mui/icons-material"
 import { useGetMyReservationsQuery } from "../features/reserve/reserveApiSlice"
 import { useMemo } from "react"
@@ -23,6 +22,7 @@ import {
   selectShowReservedCourts,
   toggleShowReservedCourts,
 } from "../features/config/configSlice"
+import CourtWeekSection from "../features/court/CourtWeekSection"
 
 const Court = () => {
   const showReservedCourts = useAppSelector(selectShowReservedCourts)
@@ -86,7 +86,6 @@ const Court = () => {
           }}
         />
       </Box>
-
       {isLoading
         ? Array.from({ length: 3 }, (_, weekIndex) => (
             <Stack key={weekIndex} spacing={2}>
@@ -110,29 +109,9 @@ const Court = () => {
           ))
         : Object.entries(groupedCourt)
             .sort()
-            .map(([weekKey, dates]) => {
-              const [, month, week] = weekKey.split("-")
-              return (
-                <Stack key={weekKey} spacing={2}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                  >{`${month}월 ${week}주차`}</Typography>
-                  <Grid2 container spacing={2}>
-                    {Object.entries(dates)
-                      .sort((a, b) => Number(a[0]) - Number(b[0]))
-                      .map(([date, timeslots]) => (
-                        <Grid2
-                          size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-                          key={date}
-                        >
-                          <CourtDateCard date={date} timeslots={timeslots} />
-                        </Grid2>
-                      ))}
-                  </Grid2>
-                </Stack>
-              )
-            })}
+            .map(([weekKey, dates]) => (
+              <CourtWeekSection key={weekKey} weekKey={weekKey} dates={dates} />
+            ))}
     </Stack>
   )
 }
